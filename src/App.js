@@ -20,6 +20,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import Profile from './components/dashboard/Profile';
 import Settings from './components/dashboard/Settings';
 import AvatarUploader from './components/projects/pikle';
+import Chatbot from './components/projects/chatbot';
 
 // Pages
 import Home from './pages/Home';
@@ -43,9 +44,9 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
-              <Route path="/how-it-works" element={<AvatarUploader />} />
-              <Route path="/info" element={<PlacementForm/>}/>
-              
+              <Route path="/chat" element={<Chatbot />} />
+
+
               {/* Protected routes */}
               <Route 
                 path="/dashboard" 
@@ -73,7 +74,25 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-              
+
+              <Route 
+                path="/how-it-works" 
+                element={
+                  <ProtectedRoute>
+                    <AvatarUploader />
+                  </ProtectedRoute>
+                } 
+              />
+
+              <Route 
+                path="/info" 
+                element={
+                  <ProtectedRoute>
+                    <PlacementForm />
+                  </ProtectedRoute>
+                } 
+              />
+
               {/* Fallback routes */}
               <Route path="/404" element={<NotFound />} />
               <Route path="*" element={<Navigate to="/404" replace />} />

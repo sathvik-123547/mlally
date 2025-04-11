@@ -7383,3 +7383,431 @@ input:checked + .toggle-label {
       font-size: 0.8rem;
     }
   }
+
+  /* Base Reset & Font */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #0c0c0c;
+  color: #f0f0f0;
+}
+
+/* Main Container */
+.new-project-container {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 2rem 3rem;
+  background: #1a1a1a;
+  border-radius: 16px;
+  box-shadow: 0 0 40px rgba(0, 255, 255, 0.05);
+  border: 1px solid #2e2e2e;
+}
+
+/* Header */
+.project-header h1 {
+  font-size: 2.2rem;
+  color: #00ffff;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px #00ffff;
+}
+
+.project-header p {
+  font-size: 1rem;
+  color: #b0b0b0;
+  margin-bottom: 2rem;
+}
+
+/* Progress Steps */
+.progress-steps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-number {
+  background: #111;
+  color: #0ff;
+  border: 2px solid #0ff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-step.active .step-number {
+  background: #0ff;
+  color: #000;
+}
+
+.step-name {
+  margin-top: 0.4rem;
+  color: #ccc;
+  font-size: 0.85rem;
+}
+
+.progress-line {
+  flex: 1;
+  height: 3px;
+  background: #0ff;
+  margin: 0 1rem;
+  border-radius: 4px;
+}
+
+/* Form Titles */
+.step-container h2 {
+  font-size: 1.6rem;
+  color: #00ffff;
+  margin-bottom: 1rem;
+  border-left: 5px solid #0ff;
+  padding-left: 0.75rem;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  color: #ccc;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+input[type="text"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #2a2a2a;
+  color: #f0f0f0;
+  border: 1px solid #444;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: #0ff;
+  box-shadow: 0 0 8px #0ff;
+}
+
+/* Project Type Cards */
+.project-type-grid {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.project-type-card {
+  flex: 1;
+  min-width: 120px;
+  padding: 1rem;
+  background-color: #2b2b2b;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  text-align: center;
+  color: #f0f0f0;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.project-type-card:hover {
+  border-color: #0ff;
+  background: #333;
+  box-shadow: 0 0 10px #0ff66a77;
+}
+
+.project-type-card.selected {
+  background-color: #0ff;
+  color: #000;
+  font-weight: bold;
+  border-color: #0ff;
+}
+
+/* Drag-Drop Zone */
+.drag-drop-zone {
+  background-color: #222;
+  color: #0ff;
+  padding: 2rem;
+  border: 2px dashed #0ff;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.drag-drop-zone:hover {
+  background-color: #2e2e2e;
+}
+
+/* Buttons */
+.button-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+button,
+.button-primary,
+.button-secondary {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button-primary {
+  background: linear-gradient(45deg, #00ffff, #00ff88);
+  color: #000;
+  box-shadow: 0 0 8px #0ff;
+}
+
+.button-primary:hover {
+  transform: translateY(-2px);
+  background: #0ff;
+}
+
+.button-secondary {
+  background: transparent;
+  border: 2px solid #0ff;
+  color: #0ff;
+}
+
+.button-secondary:hover {
+  background-color: #0ff;
+  color: #000;
+}
+
+/* Error Message */
+.error-message {
+  background: #ff4c4c;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+/* Responsive Tweaks */
+@media (max-width: 768px) {
+  .progress-steps {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .progress-line {
+    display: none;
+  }
+
+  .project-type-grid {
+    flex-direction: column;
+  }
+
+  .button-row {
+    flex-direction: column;
+  }
+}
+.text-white{
+  color: #ffffff !important;
+}
+
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f9fafe;
+  color: #1f2937;
+}
+
+/* Containers */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(145deg, #1e3a8a, #2563eb);
+  color: white;
+  padding: 4rem 2rem;
+  border-radius: 1rem;
+  margin-bottom: 4rem;
+  text-align: center;
+  position: relative;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: #e0e7ff;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-buttons button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.hero-buttons .primary {
+  background: white;
+  color: #1e3a8a;
+}
+
+.hero-buttons .secondary {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.hero-buttons button:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+/* Section Titles */
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 1rem;
+  color: #6b7280;
+  margin-bottom: 2rem;
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.card {
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease;
+  text-align: center;
+}
+
+.card:hover {
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+}
+
+.card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1e3a8a;
+}
+
+.card p {
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+/* Steps Section */
+.step-card {
+  position: relative;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  background: #1e3a8a;
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  margin: 0 auto 1rem;
+}
+
+/* Footer/Use Case */
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  padding-top: 2rem;
+  margin-bottom: 4rem;
+}
+
+.footer-card {
+  background: #f3f4f6;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  text-align: center;
+}
+
+.footer-card h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #1e3a8a;
+}
+
+.footer-card p {
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+}

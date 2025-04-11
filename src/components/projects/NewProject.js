@@ -28,7 +28,8 @@ const NewProject = () => {
   const [modelSettings, setModelSettings] = useState({
     trainingPercentage: 80,
     advancedOptions: false,
-    optimizationMetric: 'accuracy', // New field for third input
+    optimizationMetric: 'accuracy',
+    taskType: '', // Added task type to model settings
   });
   
   // API response state
@@ -162,11 +163,31 @@ const NewProject = () => {
     });
   };
   
+  // Helper function to get default task type based on project type
+  const getDefaultTaskType = (type) => {
+    const mapping = {
+      'predictor': 'regression',
+      'classifier': 'classification',
+      'cluster': 'clustering'
+    };
+    return mapping[type] || '';
+  };
+  
+  // When project type changes, update the default task type
+  React.useEffect(() => {
+    if (projectType) {
+      setModelSettings(prev => ({
+        ...prev,
+        taskType: getDefaultTaskType(projectType)
+      }));
+    }
+  }, [projectType]);
+  
   // Handle model creation and training
   const handleCreateProject = async (e) => {
     e.preventDefault();
     
-    if (!projectName || !projectType || !datasetFile || !targetColumn || featureColumns.length === 0) {
+    if (!projectName || !projectType || !datasetFile || !targetColumn || featureColumns.length === 0 || !modelSettings.taskType) {
       setError('Please fill in all required fields');
       return;
     }
@@ -180,16 +201,11 @@ const NewProject = () => {
       formData.append("file", datasetFile);
       formData.append("target_column", targetColumn);
       
-      // Map our project type to the API's task_type
-      let taskType;
-      if (projectType === 'predictor') {
-        taskType = 'regression';
-      } else if (projectType === 'classifier') {
-        taskType = 'classification';
-      } else {
-        taskType = 'clustering'; // Fallback for clustering projects
-      }
-      formData.append("task_type", taskType);
+      // Use the selected task type directly
+      formData.append("task_type", modelSettings.taskType);
+      
+      // Add feature columns
+      formData.append("feature_columns", JSON.stringify(featureColumns));
       
       // Add project metadata
       formData.append("project_name", projectName);
@@ -330,7 +346,7 @@ const NewProject = () => {
                 onClick={() => setProjectType('predictor')}
               >
                 <div className="project-type-icon">📈</div>
-                <h3>Predictor</h3>
+                <h3 style={{color:"white"}}>Predictor</h3>
                 <p>Predict numerical values like sales, prices, or ratings</p>
               </div>
               
@@ -339,7 +355,7 @@ const NewProject = () => {
                 onClick={() => setProjectType('classifier')}
               >
                 <div className="project-type-icon">🔍</div>
-                <h3>Classifier</h3>
+                <h3 style={{color:"white"}}>Classifier</h3>
                 <p>Categorize data into groups like spam detection or sentiment analysis</p>
               </div>
               
@@ -348,7 +364,7 @@ const NewProject = () => {
                 onClick={() => setProjectType('cluster')}
               >
                 <div className="project-type-icon">🔄</div>
-                <h3>Clustering</h3>
+                <h3 style={{color:"white"}}>Clustering</h3>
                 <p>Discover patterns and group similar data points</p>
               </div>
             </div>
@@ -431,96 +447,143 @@ const NewProject = () => {
       
       {/* Step 3: Configure Model */}
       {step === 3 && (
-  <div className="step-container">
-    <h2>Configure Model</h2>
+        <div className="step-container">
+          <h2>Configure Model</h2>
 
-    {/* Target Column Selector */}
-    <div className="form-group">
-      <label htmlFor="targetColumn">What do you want to predict?</label>
-      <select
-        id="targetColumn"
-        value={targetColumn}
-        onChange={handleTargetColumnChange}
-        required
-      >
-        <option value="">Select a target column</option>
-        {availableColumns.map((column, index) => (
-          <option key={index} value={column}>
-            {column}
-          </option>
-        ))}
-      </select>
-      <div className="form-hint">This is the value your model will predict</div>
-    </div>
-
-    {/* Feature Columns Selector */}
-    {targetColumn && (
-      <div className="form-group">
-        <label>Features to include in training</label>
-        <div className="features-grid">
-          {availableColumns.map((column, index) => (
-            <div 
-              key={index} 
-              className={`feature-item ${column === targetColumn ? 'disabled' : ''} ${featureColumns.includes(column) ? 'selected' : ''}`}
-              onClick={() => handleFeatureColumnToggle(column)}
+          {/* Target Column Selector */}
+          <div className="form-group">
+            <label htmlFor="targetColumn">What do you want to predict?</label>
+            <select
+              id="targetColumn"
+              value={targetColumn}
+              onChange={handleTargetColumnChange}
+              required
             >
-              <span className="feature-name">{column}</span>
-              {column === targetColumn ? (
-                <span className="feature-badge target">Target</span>
-              ) : featureColumns.includes(column) ? (
-                <span className="feature-badge included">Included</span>
-              ) : (
-                <span className="feature-badge excluded">Excluded</span>
-              )}
+              <option value="">Select a target column</option>
+              {availableColumns.map((column, index) => (
+                <option key={index} value={column}>
+                  {column}
+                </option>
+              ))}
+            </select>
+            <div className="form-hint">This is the value your model will predict</div>
+          </div>
+
+          {/* Feature Columns Selector */}
+          {targetColumn && (
+            <div className="form-group">
+              <label>Features to include in training</label>
+              <div className="features-grid">
+                {availableColumns.map((column, index) => (
+                  <div 
+                    key={index} 
+                    className={`feature-item ${column === targetColumn ? 'disabled' : ''} ${featureColumns.includes(column) ? 'selected' : ''}`}
+                    onClick={() => handleFeatureColumnToggle(column)}
+                  >
+                    <span className="feature-name">{column}</span>
+                    {column === targetColumn ? (
+                      <span className="feature-badge target">Target</span>
+                    ) : featureColumns.includes(column) ? (
+                      <span className="feature-badge included">Included</span>
+                    ) : (
+                      <span className="feature-badge excluded">Excluded</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="form-hint">Click to toggle features. The more relevant features you include, the better your model will perform.</div>
             </div>
-          ))}
+          )}
+
+          {/* Task Type Selector */}
+          <div className="form-group">
+            <label htmlFor="taskType">Task Type</label>
+            <select
+              id="taskType"
+              value={modelSettings.taskType}
+              onChange={(e) =>
+                setModelSettings({ ...modelSettings, taskType: e.target.value })
+              }
+              required
+            >
+              <option value="">Select task type</option>
+              <option value="classification">Classification</option>
+              <option value="regression">Regression</option>
+              <option value="clustering">Clustering</option>
+            </select>
+            <div className="form-hint">Choose whether you're building a classification, regression, or clustering model</div>
+          </div>
+
+          {/* Optimization Metrics */}
+          <div className="form-group">
+            <label htmlFor="optimizationMetric">Optimization Metric</label>
+            <select
+              id="optimizationMetric"
+              value={modelSettings.optimizationMetric}
+              onChange={handleOptimizationMetricChange}
+              required
+            >
+              <option value="accuracy">Accuracy</option>
+              <option value="precision">Precision</option>
+              <option value="recall">Recall</option>
+              <option value="f1">F1 Score</option>
+              <option value="rmse">RMSE (for Regression)</option>
+              <option value="mae">MAE (for Regression)</option>
+            </select>
+            <div className="form-hint">Choose how to measure your model's performance</div>
+          </div>
+
+          {/* Advanced Options Toggle */}
+          <div className="form-group">
+            <div className="advanced-options-toggle" onClick={toggleAdvancedOptions}>
+              <span>{modelSettings.advancedOptions ? 'Hide' : 'Show'} Advanced Options</span>
+              <span className="toggle-icon">{modelSettings.advancedOptions ? '▲' : '▼'}</span>
+            </div>
+            
+            {modelSettings.advancedOptions && (
+              <div className="advanced-options">
+                {/* Training Percentage Slider */}
+                <div className="form-group">
+                  <label htmlFor="trainingPercentage">
+                    Training/Test Split: {modelSettings.trainingPercentage}% / {100 - modelSettings.trainingPercentage}%
+                  </label>
+                  <input
+                    type="range"
+                    id="trainingPercentage"
+                    min="50"
+                    max="90"
+                    value={modelSettings.trainingPercentage}
+                    onChange={handleTrainingPercentageChange}
+                  />
+                  <div className="form-hint">Percentage of data used for training vs. testing</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Model Ready Message */}
+          {modelReady && (
+            <div className="success-message">
+              <p>Model has been successfully sent for training!</p>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="form-actions">
+            <button type="button" className="btn btn-outline" onClick={goToPreviousStep} disabled={loading}>
+              Back
+            </button>
+            <button 
+              type="button" 
+              className="btn btn-primary" 
+              onClick={handleCreateProject} 
+              disabled={loading || !targetColumn || featureColumns.length === 0 || !modelSettings.taskType}
+            >
+              {loading ? 'Creating Project...' : 'Train Model'}
+            </button>
+          </div>
         </div>
-        <div className="form-hint">Click to toggle features. The more relevant features you include, the better your model will perform.</div>
-      </div>
-    )}
-
-    {/* Task Type Selector */}
-    <div className="form-group">
-      <label htmlFor="taskType">Task Type</label>
-      <select
-        id="taskType"
-        value={modelSettings.taskType}
-        onChange={(e) =>
-          setModelSettings({ ...modelSettings, taskType: e.target.value })
-        }
-        required
-      >
-        <option value="">Select task type</option>
-        <option value="classification">Classification</option>
-        <option value="regression">Regression</option>
-      </select>
-      <div className="form-hint">Choose whether you're building a classification or regression model</div>
-    </div>
-
-    {/* Model Ready Message */}
-    {modelReady && (
-      <div className="success-message">
-        <p>Model has been successfully sent for training!</p>
-      </div>
-    )}
-
-    {/* Action Buttons */}
-    <div className="form-actions">
-      <button type="button" className="btn btn-outline" onClick={goToPreviousStep} disabled={loading}>
-        Back
-      </button>
-      <button 
-        type="button" 
-        className="btn btn-primary" 
-        onClick={handleCreateProject} 
-        disabled={loading || !targetColumn || featureColumns.length === 0 || !modelSettings.taskType}
-      >
-        {loading ? 'Creating Project...' : 'Train Model'}
-      </button>
-    </div>
-  </div>
-)}
-
+      )}
     </div>
   );
 };
